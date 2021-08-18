@@ -1,44 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, {useState} from 'react'
+import Main from './Main'
+import Alert from './Alert'
 
-// useMemo - render bo'ladigan compenentlarni ajratib olish u-n ish-di.
-
-function complete(num) {
-  console.log("CompleteCompute");
-  let i = 0;
-  while (i < 10000000) i++;
-  return num * 2;
-}
+export const AlertContext = React.createContext()
 
 export default function App() {
-  const [number, setNumber] = useState(8);
-  const [colored, setColor] = useState(false);
-
-  const styles = useMemo(() => {
-    return {
-      color: colored ? "crimson" : "white",
-    };
-  }, [colored]);
-
-  const computed = useMemo(() => {
-    return complete(number);
-  }, [number]);
-
-  useEffect(() => {
-    console.log("Styles was changed");
-  }, [styles]);
+  const [alert, setAlert] = useState(false)
+  const toggleAlert = () => setAlert((prev) => !prev)
 
   return (
+    <AlertContext.Provider value={alert}>
     <div className="container">
-      <p style={styles}>Amount: {computed}</p>
-      <button className="success" onClick={() => setNumber((prev) => prev + 1)}>
-        Add
-      </button>
-      <button className="danger" onClick={() => setNumber((prev) => prev - 1)}>
-        Delete
-      </button>
-      <button className="secondary" onClick={() => setColor((prev) => !prev)}>
-        Edit
-      </button>
-    </div>
-  );
+      <Alert/>
+      <Main toggle={toggleAlert}/>
+      </div>
+    </AlertContext.Provider>
+  )
 }
